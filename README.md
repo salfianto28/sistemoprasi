@@ -1,0 +1,2 @@
+# sistemoprasi
+ngak gitu
