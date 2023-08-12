@@ -1,0 +1,386 @@
+@echo off
+echo
+:login
+color 3
+    cls
+    echo.
+    echo=================================
+    echo       HALLO WELCOME GAES
+    echo=================================
+    echo.
+    set /p username= masukan Username:
+    set /p password= masukan Password:
+
+    rem Periksa username dan password
+    if "%username%"=="salfianto" (
+    if "%password%"=="20121094" (
+    goto menu_akademik
+        )
+    )
+    echo Login gagal.(username/password salah) 
+    pause
+    goto login
+
+
+:menu_akademik
+cls
+echo=========== Menu Akademik ===========
+    echo.
+    echo 1. Penilaian Mahasiswa
+    echo 2. Laporan Penilaian Mahasiswa
+    echo 3. Aplikasi Perhitungan
+    echo 4. Menu Perbaikan Komputer
+    echo 5. Menu Jaringan Komputer
+    echo 6. Menu Aplikasi
+    echo 7. Menu Setting
+    echo 8. makanan eropa
+    echo 9. Keluar
+echo====================================
+echo.
+
+    set /p pilihan=Masukkan pilihan: 
+
+    if "%pilihan%"=="1" (
+        call :penilaian_mahasiswa
+    ) else if "%pilihan%"=="2" (
+        call :laporan_penilaian_mahasiswa
+    ) else if "%pilihan%"=="3" (
+        call :aplikasi_perhitungan
+    ) else if "%pilihan%"=="4" (
+        call :menu_perbaikan_komputer
+    ) else if "%pilihan%"=="5" (
+        call :menu_jaringan_komputer
+    ) else if "%pilihan%"=="6" (
+        call :menu_aplikasi
+    ) else if "%pilihan%"=="7" (
+        call :menu_setting
+    ) else if "%pilihan%"=="8" (
+        goto  makanan_eropa
+    ) else if "%pilihan%"=="9" (
+        exit
+    ) else (
+        echo Pilihan tidak valid!
+        pause
+        goto menu_akademik
+    )
+
+---------------------------------------
+---------------------------------------
+
+:penilaian_mahasiswa
+cls
+echo======= Menu Penilaian Mahasiswa =======
+echo========================================
+echo.
+    echo 1. Input Penilaian
+    echo 2. Kembali ke Menu Akademik
+echo========================================
+echo.
+
+    set /p pilihan=Masukkan pilihan: 
+
+    if "%pilihan%"=="1" (
+        call :input_penilaian
+    ) else if "%pilihan%"=="2" (
+        goto menu_akademik
+    ) else (
+        echo Pilihan tidak valid!
+        pause
+        goto penilaian_mahasiswa
+    )
+
+:input_penilaian
+    cls
+    echo        penilaian mahasiswa
+    echo====================================
+        echo.
+        set /p "makul=Masukkan nama mata kuliah: "
+        set /p "sks=Masukkan jumlah SKS: "
+        set /p "nilai=Masukkan nilai mahasiswa: "
+
+    if %nilai% GTR 85 (
+        set "grade=A"
+        set "bobot=4"
+    ) else if %nilai% GTR 75 (
+        set "grade=B+"
+        set "bobot=3.5"
+    ) else if %nilai% GTR 65 (
+        set "grade=B"
+        set "bobot=3"
+    ) else if %nilai% GTR 55 (
+        set "grade=C+"
+        set "bobot=2.5"
+    ) else if %nilai% GTR 45 (
+        set "grade=C"
+        set "bobot=2"
+    ) else if %nilai% GTR 35 (
+        set "grade=D"
+        set "bobot=1"
+    ) else (
+        set "grade=E"
+        set "bobot=0"
+    )
+
+    echo %makul%,%sks%,%nilai%,%grade%,%bobot% >> laporan_penilaian_mahasiswa.csv
+
+    echo.
+    echo Hasil Penilaian:
+    echo --------------------------------------------------------------
+    echo Nama Mata Kuliah: %makul%
+    echo Jumlah SKS       : %sks%
+    echo Nilai Mahasiswa  : %nilai%
+    echo Grade            : %grade%
+    echo Bobot            : %bobot%
+    echo --------------------------------------------------------------
+    pause
+    goto penilaian_mahasiswa
+
+--------------------------
+--------------------------
+
+:laporan_penilaian_mahasiswa
+    cls
+    echo Laporan Penilaian Mahasiswa:
+    echo============================================
+    setlocal enabledelayedexpansion
+    set "counter=1"
+
+for /f "tokens=1-5 delims=," %%a in (laporan_penilaian_mahasiswa.csv) do (
+        echo No: !counter!
+        echo Nama Mata Kuliah : %%a
+        echo Jumlah SKS       : %%b
+        echo Nilai Mahasiswa  : %%c
+        echo Grade            : %%d
+        echo Bobot            : %%e
+        echo -------------------------------------------
+        set /a "counter+=1"
+    )
+    echo.
+    pause
+    goto menu_akademik
+
+--------------------------
+--------------------------
+
+:aplikasi_perhitungan
+    cls
+    echo Menu Aplikasi Perhitungan
+    echo================================================
+    set /p "angka1=Masukkan angka pertama: "
+    set /p "operator=Masukkan operator (+, -, *, /): "
+    set /p "angka2=Masukkan angka kedua: "
+    echo================================================
+    set /a "hasil=0"
+    if "%operator%"=="+" set /a "hasil=angka1+angka2"
+    if "%operator%"=="-" set /a "hasil=angka1-angka2"
+    if "%operator%"=="*" set /a "hasil=angka1*angka2"
+    if "%operator%"=="/" set /a "hasil=angka1/angka2"
+
+    echo Hasil: %hasil%
+    pause
+    goto menu_akademik
+
+--------------------------
+--------------------------
+
+:menu_perbaikan_komputer
+    cls
+    echo Menu Perbaikan Komputer
+    echo==================================                                                                               
+    echo 1. Perbaiki Audio
+    echo 2. Disk Cleanup
+    echo 3. Mereset Jaringan
+    echo 4. Mereset Firewall                                            
+    echo 5. Kembali ke Menu akademik
+    echo================================== 
+    echo.                                          
+    set /p choice=Masukkan pilihan (1-5): 
+    
+    if "%choice%"=="1" goto scan_disk
+    if "%choice%"=="2" goto disk_cleanup
+    if "%choice%"=="3" goto defrag_hard_drive
+    if "%choice%"=="4" goto perbaiki_mbr
+    if "%choice%"=="5" goto menu_akademik    
+    echo.
+    goto menu_perbaikan_komputer
+
+:scan_disk
+    echo.
+    echo Melakukan perbaikan audio...
+    echo.
+    net stop Audiosrv
+    net start Audiosrv
+    echo.
+    echo Perbaikan audio selesai.
+    pause
+    goto menu_perbaikan_komputer
+
+:disk_cleanup
+    echo.
+    echo Menjalankan Disk Cleanup...
+    cleanmgr /d C:
+    echo.
+    pause
+    goto menu_perbaikan_komputer
+
+:defrag_hard_drive
+    echo Mereset Jaringan...
+    netsh winsock reset
+    netsh int ip reset
+    echo Reset jaringan selesai.
+    pause
+    goto menu_perbaikan_komputer
+
+:perbaiki_mbr
+    echo.
+    echo Mereset Firewall...
+    netsh advfirewall reset
+    echo Reset firewall selesai.
+    pause
+    goto menu_perbaikan_komputer
+
+----------------------------------
+----------------------------------
+
+:menu_jaringan_komputer
+    cls                                                               
+    echo Menu Jaringan Komputer                                                          
+    echo=========================================
+    echo 1. Chek ping ke situs 
+    echo 2. Periksa WIFI
+    echo 3. Tampilkan Alamat IP
+    echo 4. Kembali ke Menu akademik
+    echo=========================================
+    echo.
+    set /p choice=Silahkan Masukkan Pilihan Kamu: 
+
+    if "%choice%"=="1" (
+        call :chek_ping_ke_situs
+    ) else if "%choice%"=="2" (
+        call :periksa_ip
+    ) else if "%choice%"=="3" (
+        call :tampilkan_ip
+    ) else if "%choice%"=="4" (
+        goto menu_akademik
+    )
+    echo.
+    goto menu_jaringan_komputer
+
+:Chek_ping_ke_situs
+    cls
+    echo cek ping di bawah
+    echo===========================
+    set /p website=www.google.com:
+    ping %website%
+    echo.
+    pause
+    goto :eof
+
+:periksa_ip
+    cls
+    echo.
+    echo Menjalankan WIFI
+    netsh wlan show networks mode=bssid
+    echo.
+    pause
+    goto :eof
+
+:tampilkan_ip
+    cls
+    echo.
+    echo Menampilkan alamat IP Anda:
+    ipconfig | findstr /i "IPv4"
+    pause
+    goto :eof
+------------------------------------
+------------------------------------
+:menu_aplikasi
+    cls
+    echo Menu Aplikasi
+    echo======================================
+    echo 1. Microsoft Word
+    echo 2. Microsoft Excel
+    echo 3. Notepad
+    echo 4. kembali ke menu akademik
+    echo=======================================
+    echo.
+    set /p pilihan=Masukkan pilihan Anda (1-4):
+
+    IF "%pilihan%"=="1" (
+        start winword
+    ) ELSE IF "%pilihan%"=="2" (
+        start excel
+    ) ELSE IF "%pilihan%"=="3" (
+        start notepad
+    ) else if "%pilihan%"=="4" (
+        goto menu_akademik
+    ) ELSE (
+        echo Pilihan tidak valid.
+    )
+    echo.
+    pause
+    goto menu_aplikasi
+
+--------------------------
+--------------------------
+
+:menu_setting
+    cls
+    echo Menu_Setting
+    echo===================================
+    echo 1. Setting Keyboard
+    echo 2. Setting Language
+    echo 3. Setting Sound
+    echo 4. Kembali ke Menu akademik
+    echo====================================
+    echo.
+    set /p pilihan=Silakan pilih menu (1-4): 
+
+    if "%pilihan%"=="1" (
+    start control keyboard
+    ) else if "%pilihan%"=="2" (
+    start intl.cpl
+    ) else if "%pilihan%"=="3" (
+    start SndVol.exe
+    ) else if "%pilihan%"=="4" (
+    goto menu_akademik
+    ) else (
+    echo Pilihan tidak valid. Silakan coba lagi.
+    )
+
+    :makanan_eropa
+    cls
+    echo======= makanan eropa =======
+    echo========================================
+    echo.
+        echo 1. pizza
+        echo 2. sepageti
+        echo 3. Kembali ke Menu Akademik
+    echo========================================
+    
+    set /p pilihan=Masukkan pilihan: 
+
+    if "%pilihan%"=="1" (
+        call :pizza
+    )elseif "%pilihan%"=="2" (
+        call :sepageti
+    ) else if "%pilihan%"=="3" (
+        goto menu_akademik
+    ) else (
+        echo Pilihan tidak valid!
+        pause
+        goto penilaian_mahasiswa
+    )
+:pizza
+    cls
+    echo harga 30000
+    echo makanan berat
+    pause
+    goto makanan_eropa
+:sepageti
+    cls
+    echo harga 25000
+    echo makanan berat
+    echo.
+    pause
+    goto makanan_eropa
